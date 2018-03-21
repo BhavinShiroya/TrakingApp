@@ -51,12 +51,12 @@ export class HomePage {
     public AuthServices: AuthServicesProvider,
     public Toaster: ToasterServicesProvider,
     public localNotifications: LocalNotifications) {
-  }
-
-  ionViewDidEnter() {
     this.platform.ready().then(() => {
       this.checkGPS();
     });
+  }
+
+  ionViewDidEnter() {
     // this.storage.get('user').then((data) => {
     //   console.log(JSON.parse(data).uid);
     //   // this.AuthServices.saveTimers(pos, JSON.parse(data).uid).then((data) => {
@@ -77,13 +77,13 @@ export class HomePage {
 
   checkGPS() {
     this.diagnostic.isLocationEnabled().then((isAvailable) => {
-      if (!isAvailable) { 
+      if (!isAvailable) {
         this.isGPSOn = false;
         this.enableLocation();
       } else {
         this.Toaster.showToast('location set successfully');
         this.isGPSOn = true;
-       // this.getUserPosition();
+        this.getUserPosition();
       }
     })
       .catch((e) => {
@@ -118,8 +118,8 @@ export class HomePage {
     this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
       this.currentPos = pos;
       console.log(this.currentPos);
-      // alert(this.currentPos.coords.latitude);
-      // alert(this.currentPos.coords.longitude);
+      alert(this.currentPos.coords.latitude);
+      alert(this.currentPos.coords.longitude);
       this.storage.get('user').then((data) => {
         this.AuthServices.saveTimers(JSON.parse(data).uid, pos).then((data) => {
           this.Toaster.showToast('saved Successully.');
@@ -127,7 +127,7 @@ export class HomePage {
       });
     }, (err: PositionError) => {
       console.log("error : " + err.message);
-      // alert(err.message);
+      alert(err.message);
     });
   }
 
