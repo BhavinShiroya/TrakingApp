@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button icon-only menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title text-center>
+      Home
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addTimer()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="page-home" (ionScroll)="onScroll($event)">
+  <div>
+    <ion-card *ngFor="let time of timerArray; let i = index">
+      <ion-card-header>
+        <button ion-button large block clear class="timer-button x-large">{{time.showTime}}</button>
+        <!-- <button ion-button *ngIf="!secondsString || secondsString == 0" large block clear class="timer-button">Timer set up incorrectly</button> -->
+      </ion-card-header>
+      <button ion-button (click)="deleteTimer(i)">Delete</button>
+    </ion-card>
+  </div>
+  3
+  <button (click)="enableLocation()" ion-button large block clear class="timer-button x-large">show</button>
+</ion-content>
+<ion-footer>
+  <footer></footer>
+</ion-footer>

@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title text-center>
+      Timer
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="page-sign-up" padding>
+  <form #loginForm="ngForm" class="form" (ngSubmit)="setReminder()">
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-label>Date</ion-label>
+            <ion-datetime CancelText="Cancel" DoneText="OK" displayFormat="DD/MM/YYYY h:mm A" name="date" [(ngModel)]="timerData.date"></ion-datetime>
+          </ion-item>
+          <!-- <ion-item>
+            <ion-label>Time</ion-label>
+            <ion-datetime displayFormat="h:mm" name="time" [(ngModel)]="timerData.time"></ion-datetime>
+          </ion-item> -->
+        </ion-list>
+      </ion-col>
+      <ion-col col-12>
+        <label *ngIf="errorMessage!=''">
+          <span>{{errorMessage}}</span>
+        </label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <button ion-button block color="secondary" type="submit" [disabled]="!loginForm.form.valid">Set Reminder</button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
