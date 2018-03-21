@@ -83,7 +83,7 @@ export class HomePage {
       } else {
         this.Toaster.showToast('location set successfully');
         this.isGPSOn = true;
-        this.getUserPosition();
+       // this.getUserPosition();
       }
     })
       .catch((e) => {
@@ -118,8 +118,8 @@ export class HomePage {
     this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
       this.currentPos = pos;
       console.log(this.currentPos);
-      alert(this.currentPos.coords.latitude);
-      alert(this.currentPos.coords.longitude);
+      // alert(this.currentPos.coords.latitude);
+      // alert(this.currentPos.coords.longitude);
       this.storage.get('user').then((data) => {
         this.AuthServices.saveTimers(JSON.parse(data).uid, pos).then((data) => {
           this.Toaster.showToast('saved Successully.');
@@ -127,7 +127,7 @@ export class HomePage {
       });
     }, (err: PositionError) => {
       console.log("error : " + err.message);
-      alert(err.message);
+      // alert(err.message);
     });
   }
 
