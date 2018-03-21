@@ -31,6 +31,7 @@ export class LoginPage {
   ) {
     this.storage.get('user').then((name) => {
       if (name) {
+        this.events.publish('user:loggedin', JSON.parse(name));
         this.navCtrl.setRoot('home-page');
       }
     });

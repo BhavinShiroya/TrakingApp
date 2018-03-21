@@ -18,6 +18,7 @@ export class TimerModalPage {
 
   timerData = {
     date: '',
+    name: ''
   };
 
   constructor(public navCtrl: NavController,
@@ -36,6 +37,6 @@ export class TimerModalPage {
   }
 
   setReminder() {
-    this.viewCtrl.dismiss(this.timerData.date);
+    this.viewCtrl.dismiss(this.timerData);
   }
 }

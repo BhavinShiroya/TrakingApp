@@ -18,6 +18,7 @@
   <div>
     <ion-card *ngFor="let time of timerArray; let i = index">
       <ion-card-header>
+        <label>{{time.name}}</label>
         <button ion-button large block clear class="timer-button x-large">{{time.showTime}}</button>
         <!-- <button ion-button *ngIf="!secondsString || secondsString == 0" large block clear class="timer-button">Timer set up incorrectly</button> -->
       </ion-card-header>
