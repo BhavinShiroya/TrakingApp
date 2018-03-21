@@ -63,6 +63,7 @@ export class HomePage {
     //   //   this.Toaster.showToast('saved Successully.');
     //   // });
     // });
+    //as
     this.storage.get('timer').then((data) => {
       this.timerArray = JSON.parse(data);
       if (!this.timerArray || this.timerArray.length === 0) {
@@ -76,7 +77,7 @@ export class HomePage {
 
   checkGPS() {
     this.diagnostic.isLocationEnabled().then((isAvailable) => {
-      if (!isAvailable) {
+      if (!isAvailable) { 
         this.isGPSOn = false;
         this.enableLocation();
       } else {
