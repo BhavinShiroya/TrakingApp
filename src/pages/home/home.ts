@@ -53,9 +53,6 @@ export class HomePage {
     public AuthServices: AuthServicesProvider,
     public Toaster: ToasterServicesProvider,
     public localNotifications: LocalNotifications) {
-  }
-
-  ionViewDidEnter() {
     this.platform.ready().then(() => {
       this.checkGPS();
       this.bg.enable();
@@ -64,12 +61,16 @@ export class HomePage {
           
       });
     });
+  }
+
+  ionViewDidEnter() {
     // this.storage.get('user').then((data) => {
     //   console.log(JSON.parse(data).uid);
     //   // this.AuthServices.saveTimers(pos, JSON.parse(data).uid).then((data) => {
     //   //   this.Toaster.showToast('saved Successully.');
     //   // });
     // });
+    //as
     this.storage.get('timer').then((data) => {
       this.timerArray = JSON.parse(data);
       if (!this.timerArray || this.timerArray.length === 0) {
@@ -83,19 +84,19 @@ export class HomePage {
 
   checkGPS() {
     this.diagnostic.isLocationEnabled().then((isAvailable) => {
-      if (!isAvailable) {
+      if (isAvailable) {
+        // this.Toaster.showToast('location set successfully');
+        this.isGPSOn = true;
+        this.getUserPosition(null);
+      } else {
         this.isGPSOn = false;
         this.enableLocation();
-      } else {
-        this.Toaster.showToast('location set successfully');
-        this.isGPSOn = true;
-        this.getUserPosition();
       }
     })
       .catch((e) => {
-        this.isGPSOn = false;
-        alert('erro');
-        this.Toaster.showToast('Error in Location get...');
+        // this.isGPSOn = false;
+        // alert('erro');
+        // this.Toaster.showToast('Error in Location get...');
       });
   }
 
@@ -114,26 +115,33 @@ export class HomePage {
     });
   }
 
-  getUserPosition() {
+  getUserPosition(notificationObject) {
+    this.loading.show();
     var options = {
       maximumAge: 3000,
-      timeout: 1000,
+      timeout: 3000,
       enableHighAccuracy: true
     };
 
     this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
       this.currentPos = pos;
       console.log(this.currentPos);
-      alert(this.currentPos.coords.latitude);
-      alert(this.currentPos.coords.longitude);
+      // alert(this.currentPos.coords.latitude);
+      // alert(this.currentPos.coords.longitude);
       this.storage.get('user').then((data) => {
-        this.AuthServices.saveTimers(JSON.parse(data).uid, pos).then((data) => {
-          this.Toaster.showToast('saved Successully.');
-        });
+        if (this.currentPos.coords) {
+          this.AuthServices.saveTimers(JSON.parse(data).uid, notificationObject,  this.currentPos).then((data) => {
+            this.Toaster.showToast('saved Successully.');
+            this.loading.hide();
+          });
+        } else {
+          this.loading.hide();
+        }
       });
     }, (err: PositionError) => {
       console.log("error : " + err.message);
-      alert(err.message);
+      this.Toaster.showToast(err.message);
+      this.loading.hide();
     });
   }
 
@@ -142,9 +150,10 @@ export class HomePage {
     profileModal.onDidDismiss(data => {
       if (data) {
         var currentDate = moment();
-        var setDateObject = moment(data);
+        var setDateObject = moment(data.date);
         if (moment.duration(setDateObject.diff(currentDate)).seconds() > 0) {
           var dateObject = {
+            'name': data.name,
             'setTime': setDateObject,
             'days': moment.duration(setDateObject.diff(currentDate)).days(),
             'hours': moment.duration(setDateObject.diff(currentDate)).hours(),
@@ -205,9 +214,9 @@ export class HomePage {
     this.localNotifications.schedule({
       id: object.setTime,
       title: 'Attention',
-      text: 'timer close',
+      text: object.name,
       data: { mydata: 'My hidden message this is' }
     });
-    this.getUserPosition();
+    this.getUserPosition(object);
   }
 }
