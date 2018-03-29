@@ -25,6 +25,8 @@ temp/
 hooks/
 platforms/
 plugins/
+resources/android
+resources/ios
 plugins/android.json
 plugins/ios.json
 www/

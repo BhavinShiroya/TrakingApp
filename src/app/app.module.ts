@@ -20,6 +20,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { DatePicker } from '@ionic-native/date-picker';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import { BackgroundMode } from '@ionic-native/background-mode';
 import { TimerServiceProvider } from '../providers/timer-service/timer-service';
 
 @NgModule({
@@ -45,6 +46,7 @@ import { TimerServiceProvider } from '../providers/timer-service/timer-service';
     LocationAccuracy,
     Diagnostic,
     DatePicker,
+  BackgroundMode,
     LocalNotifications,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthServicesProvider,

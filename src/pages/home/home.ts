@@ -11,6 +11,7 @@ import { DatePicker } from '@ionic-native/date-picker';
 import { Storage } from '@ionic/storage';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Diagnostic } from '@ionic-native/diagnostic';
+import {BackgroundMode} from '@ionic-native/background-mode';
 import * as moment from 'moment';
 
 @IonicPage({
@@ -37,6 +38,7 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
+    public bg:BackgroundMode,
     public navParams: NavParams,
     public platform: Platform,
     private datePicker: DatePicker,
@@ -56,6 +58,11 @@ export class HomePage {
   ionViewDidEnter() {
     this.platform.ready().then(() => {
       this.checkGPS();
+      this.bg.enable();
+      this.bg.on("activate").subscribe((data)=>{
+          console.log('bg11');
+          
+      });
     });
     // this.storage.get('user').then((data) => {
     //   console.log(JSON.parse(data).uid);
