@@ -58,12 +58,12 @@ export class AuthServicesProvider {
   }
 
   saveTimers(uid, notificationObject, coordinates) {
+    console.log(uid,notificationObject,coordinates);
     let path = `users/${uid}/timers`; // Endpoint on firebase
     var data = {
       name: notificationObject.name,
-      latitude: coordinates.coords.latitude,
-      longitude: coordinates.coords.longitude,
-      timestamp: coordinates.timestamp
+      latitude: coordinates.latitude,
+      longitude: coordinates.longitude
     }
     console.log(data);
     return this.db.object(path).update(data).catch(error => console.log(error));

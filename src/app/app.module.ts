@@ -3,7 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-
+// import {BackgroundGeolocatio} from '@ionic-native'
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -20,8 +20,10 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { DatePicker } from '@ionic-native/date-picker';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
-import { BackgroundMode } from '@ionic-native/background-mode';
+// import { BackgroundMode } from '@ionic-native/background-mode';
+import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { TimerServiceProvider } from '../providers/timer-service/timer-service';
+import { LocatoinTrackerProvider } from '../providers/locatoin-tracker/locatoin-tracker';
 
 @NgModule({
   declarations: [
@@ -46,14 +48,16 @@ import { TimerServiceProvider } from '../providers/timer-service/timer-service';
     LocationAccuracy,
     Diagnostic,
     DatePicker,
-  BackgroundMode,
+  // BackgroundMode,
+  BackgroundGeolocation,
     LocalNotifications,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthServicesProvider,
     AndroidPermissions,
     ToasterServicesProvider,
     LoadingServicesProvider,
-    TimerServiceProvider
+    TimerServiceProvider,
+    LocatoinTrackerProvider
   ]
 })
 export class AppModule { }
