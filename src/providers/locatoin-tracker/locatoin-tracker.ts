@@ -34,80 +34,17 @@ export class LocatoinTrackerProvider {
     console.log("Hello LocatoinTrackerProvider Provider");
   }
 
-  startBackgroundLocation(): void {
-    console.log("background");
-    const backgroundOptions: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      stationaryRadius: 20,
-      distanceFilter: 30,
-      stopOnTerminate: false,
-      debug: false,
-      notificationTitle: "geotracker",
-      notificationText: "Demonstrate background geolocation",
-      activityType: "AutomotiveNavigation",
-      locationProvider: this.backgroundGeolocation.LocationProvider
-        .ANDROID_ACTIVITY_PROVIDER,
-      interval: 1000,
-      fastestInterval: 500,
-      activitiesInterval: 2000
-    };
-
-    this.backgroundGeolocation
-      .configure(backgroundOptions)
-
-      .subscribe(
-        (location: BackgroundGeolocationResponse) => {
-          // Run update inside of Angular's zone
-
-          if (location) {
-            console.log("Background", location);
-            this.zone.run(() => {
-              this.lat = location.latitude;
-              this.lng = location.longitude;
-            });
-          }
-          this.backgroundGeolocation.finish();
-          // this.backgroundGeolocation.stop();
-        },
-        err => {
-          console.log(err);
-        }
-      );
-
-    this.backgroundGeolocation.start();
-  }
-  getForegroundLocation(): void {
-    console.log("foreground");
-    // Foreground Tracking
-
-    let options = {
-      frequency: 3000,
-      enableHighAccuracy: true
-    };
-    this.watch = this.geolocation
-      .watchPosition(options)
-      .filter((p: any) => p.code === undefined)
-      .subscribe((position: Geoposition) => {
-        console.log(position);
-
-        // Run update inside of Angular's zone
-        this.zone.run(() => {
-          this.lat = position.coords.latitude;
-          this.lng = position.coords.longitude;
-        });
-      });
-  }
-
   pushLocation(notificationObject) {
     console.log(
       "Sending user location for " + notificationObject.name + " which is",
       this.lat,
-      this.lng
+      this.lng,
+      " on " + new Date()
     );
     this.storage.get("user").then(data => {
       this.AuthServices.saveTimers(JSON.parse(data).uid, notificationObject, {
         longitude: this.lng,
-        latitude: this.lat  
+        latitude: this.lat
       }).then(data => {
         console.log("Function to get position:save time");
       });
@@ -125,19 +62,20 @@ export class LocatoinTrackerProvider {
 
     this.backgroundGeolocation.configure(config).subscribe(
       location => {
-        console.log(
-          "BackgroundGeolocation:  " +
-            location.latitude +
-            "," +
-            location.longitude
-        );
+        // console.log(
+        //   "BackgroundGeolocation:  " +
+        //     location.latitude +
+        //     "," +
+        //     location.longitude
+        // );
 
         // Run update inside of Angular's zone
+
         this.zone.run(() => {
           this.lat = location.latitude;
           this.lng = location.longitude;
         });
-        
+        // this.backgroundGeolocation.finish();
       },
       err => {
         console.log(err);
@@ -158,7 +96,7 @@ export class LocatoinTrackerProvider {
       .watchPosition(options)
       .filter((p: any) => p.code === undefined)
       .subscribe((position: Geoposition) => {
-        console.log(position);
+        // console.log(position);
 
         // Run update inside of Angular's zone
         this.zone.run(() => {
@@ -169,12 +107,11 @@ export class LocatoinTrackerProvider {
   }
 
   startTracking(): void {
-    // this.getForegroundLocation();
-    // this.startBackgroundLocation();
+    
     this.printBackground();
   }
   stopTracking(): void {
-    console.log("stopped");
+    // console.log("stopped");
     this.backgroundGeolocation.stop();
     this.watch.unsubscribe();
   }

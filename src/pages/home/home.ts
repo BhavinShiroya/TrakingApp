@@ -26,7 +26,7 @@ import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { Diagnostic } from "@ionic-native/diagnostic";
 // import { BackgroundMode } from "@ionic-native/background-mode";
 import { BackgroundGeolocation } from "@ionic-native/background-geolocation";
-
+import { BackgroundMode } from "@ionic-native/background-mode";
 import * as moment from "moment";
 import { Subscription } from "rxjs/Subscription";
 
@@ -74,11 +74,17 @@ export class HomePage {
     public Toaster: ToasterServicesProvider,
     public localNotifications: LocalNotifications,
     private backgroundGeolocation: BackgroundGeolocation,
+    private backgroundMode: BackgroundMode,
     private locationTracker: LocatoinTrackerProvider
   ) {
     this.platform.ready().then(() => {
       this.checkGPS();
       this.locationTracker.startTracking();
+      this.backgroundMode.enable();
+
+      this.localNotifications.on("trigger", notification => {
+        console.log(notification);
+      });
     });
   }
 
@@ -181,12 +187,23 @@ export class HomePage {
           this.timerArray.push(dateObject);
           this.storage.set("timer", JSON.stringify(this.timerArray));
           this.timerTick();
+          this.scheduleNotification(dateObject);
         } else {
           this.Toaster.showToast("Please Select above then current date.");
         }
       }
     });
     profileModal.present();
+  }
+
+  scheduleNotification(object) {
+    this.localNotifications.schedule({
+      id: object.setTime,
+      title: "Attention",
+      text: object.name,
+      data: { mydata: "My hidden message this is" },
+      at: moment(object.setTime)
+    });
   }
 
   onScroll(event) {}
@@ -227,7 +244,13 @@ export class HomePage {
             this.storage.set("timer", JSON.stringify(this.timerArray));
           } else {
             if (!this.timerArray[i].timeOut) {
-              this.sendNotification(this.timerArray[i]);
+              console.log(
+                "Notification time for " +
+                  this.timerArray[i].name +
+                  " is " +
+                  new Date()
+              );
+              //this.sendNotification(this.timerArray[i]);
             }
             this.timerArray[i].timeOut = true;
             // console.log(
@@ -241,10 +264,10 @@ export class HomePage {
           if (
             moment(this.timerArray[i].endTime).diff(currentDate, "seconds") < 1
           ) {
-            console.log(
-              "about to push",
-              this.timerArray[i] + " on " + new Date()
-            );
+            // console.log(
+            //   "about to push",
+            //   this.timerArray[i] + " on " + new Date()
+            // );
 
             this.locationTracker.pushLocation(this.timerArray[i]);
             this.timerArray.splice(i, 1);
@@ -274,8 +297,10 @@ export class HomePage {
       id: object.setTime,
       title: "Attention",
       text: object.name,
-      data: { mydata: "My hidden message this is" }
+      data: { mydata: "My hidden message this is" },
+      at: new Date()
     });
+    // this.localNotifications.is
     // this.addWarnTimer(object);
   }
 }
