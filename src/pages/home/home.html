@@ -16,7 +16,6 @@
 
 <ion-content class="page-home" (ionScroll)="onScroll($event)">
   <div>
-
     <ion-card *ngFor="let time of timerArray; let i = index">
       <ion-card-header>
         <label>{{time.name}}</label>
@@ -27,10 +26,17 @@
       <button ion-button *ngIf="time.timeOut" (click)="deleteTimer(i)">Acknowledge</button>
     </ion-card>
   </div>
-
-  <div *ngIf="extraTimer" class="or-label">
+  <!-- <div *ngIf="extraTimer" class="or-label">
     History
-  </div>
+  </div> -->
+  <ion-grid *ngIf="extraTimer" class="product-detail-title">
+    <ion-row>
+      <ion-col col-12>
+        <h3>Previous Timer
+        </h3>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
   <div>
     <ion-card *ngFor="let time of extraTimer; let i = index">
       <ion-card-header>
