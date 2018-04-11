@@ -16,6 +16,7 @@
 
 <ion-content class="page-home" (ionScroll)="onScroll($event)">
   <div>
+
     <ion-card *ngFor="let time of timerArray; let i = index">
       <ion-card-header>
         <label>{{time.name}}</label>
@@ -24,6 +25,21 @@
       </ion-card-header>
       <button ion-button (click)="deleteTimer(i)">Delete</button>
       <button ion-button *ngIf="time.timeOut" (click)="deleteTimer(i)">Acknowledge</button>
+    </ion-card>
+  </div>
+
+  <div *ngIf="extraTimer" class="or-label">
+    History
+  </div>
+  <div>
+    <ion-card *ngFor="let time of extraTimer; let i = index">
+      <ion-card-header>
+        <label>{{time.name}}</label>
+        <button ion-button large block clear class="timer-button x-large">{{time.setTime | date: "yyyy/MM/dd HH:mm:ss"}}</button>
+        <!-- <button ion-button *ngIf="!secondsString || secondsString == 0" large block clear class="timer-button">Timer set up incorrectly</button> -->
+      </ion-card-header>
+      <!-- <button ion-button (click)="deleteTimer(i)">Delete</button>
+      <button ion-button *ngIf="time.timeOut" (click)="deleteTimer(i)">Acknowledge</button> -->
     </ion-card>
   </div>
   <!-- <button (click)="enableLocation()" ion-button large block clear class="timer-button x-large">show</button> -->

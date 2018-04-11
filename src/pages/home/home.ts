@@ -52,7 +52,7 @@ export class HomePage {
   timerArray: Array<any> = [];
   timerTime: any;
   warningTime: any;
-  warningTimeArray: Array<any> = [];
+  extraTimer: Array<any> = [];
   public watch: any;
   public lat: number = 0;
   public lng: number = 0;
@@ -202,7 +202,7 @@ export class HomePage {
       title: "Attention",
       text: object.name,
       data: { mydata: "My hidden message this is" },
-      at: moment(object.setTime)
+      at: new Date(object.setTime)
     });
   }
 
@@ -270,6 +270,7 @@ export class HomePage {
             // );
 
             this.locationTracker.pushLocation(this.timerArray[i]);
+            this.extraTimer.push(this.timerArray[i]);
             this.timerArray.splice(i, 1);
             this.storage.set("timer", JSON.stringify(this.timerArray));
           }
