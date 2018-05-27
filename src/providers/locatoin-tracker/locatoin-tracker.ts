@@ -24,6 +24,7 @@ export class LocatoinTrackerProvider {
   public watch: any;
   public lat: number = 0;
   public lng: number = 0;
+  public locations = [];
   constructor(
     private geolocation: Geolocation,
     private backgroundGeolocation: BackgroundGeolocation,
@@ -53,15 +54,56 @@ export class LocatoinTrackerProvider {
 
   printBackground() {
     let config = {
-      desiredAccuracy: 0,
-      stationaryRadius: 1,
-      distanceFilter: 1,
-      debug: false,
-      interval: 1000
+      desiredAccuracy: 10,
+      stationaryRadius: 5,
+      distanceFilter: 10,
+      debug: true,
+      interval: 1000,
+      url: 'http://52.66.98.74/api/post-lat-long',
+      params: {
+        lat: '13',
+        long: '33',
+        time: new Date()
+      },
+      param:{
+        lat: '13',
+        long: '33',
+        time: new Date()
+      }
     };
-
-    this.backgroundGeolocation.configure(config).subscribe(
-      location => {
+    this.backgroundGeolocation.changePace(true).then((location) => {
+      console.log("-------Change Pace------------", location);
+      this.storage.get("user").then(data => {
+        this.AuthServices.saveTimers(
+          JSON.parse(data).uid,
+          { name: "test - pace", time: new Date() },
+          {
+            longitude: this.lng,
+            latitude: this.lat
+          }
+        ).then(data => {
+          console.log("Function to get position:save time");
+        });
+      });
+    })
+    this.backgroundGeolocation.onStationary().then((location) => {
+      console.log("-------On Stationary------------", location);
+      this.storage.get("user").then(data => {
+        this.AuthServices.saveTimers(
+          JSON.parse(data).uid,
+          { name: "test - stationary", time: new Date() },
+          {
+            longitude: this.lng,
+            latitude: this.lat
+          }
+        ).then(data => {
+          console.log("Function to get position:save time");
+        });
+      });
+    });
+    this.backgroundGeolocation
+      .configure(config)
+      .subscribe((location: BackgroundGeolocationResponse) => {
         // console.log(
         //   "BackgroundGeolocation:  " +
         //     location.latitude +
@@ -70,17 +112,60 @@ export class LocatoinTrackerProvider {
         // );
 
         // Run update inside of Angular's zone
-
+        this.backgroundGeolocation.changePace(true).then((location) => {
+          console.log("-------Change Pace------------", location);
+          this.storage.get("user").then(data => {
+            this.AuthServices.saveTimers(
+              JSON.parse(data).uid,
+              { name: "test - pace", time: new Date() },
+              {
+                longitude: this.lng,
+                latitude: this.lat
+              }
+            ).then(data => {
+              console.log("Function to get position:save time");
+            });
+          });
+        })
+        this.backgroundGeolocation.onStationary().then((location) => {
+          console.log("-------On Stationary------------", location);
+          this.storage.get("user").then(data => {
+            this.AuthServices.saveTimers(
+              JSON.parse(data).uid,
+              { name: "test - stationary", time: new Date() },
+              {
+                longitude: this.lng,
+                latitude: this.lat
+              }
+            ).then(data => {
+              console.log("Function to get position:save time");
+            });
+          });
+        });
+        console.log(location);
+        // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
+        // and the background-task may be completed.  You must do this regardless if your HTTP request is successful or not.
+        // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
+        // this.backgroundGeolocation.finish(); // FOR IOS ONLY
+        this.storage.get("user").then(data => {
+          this.AuthServices.saveTimers(
+            JSON.parse(data).uid,
+            { name: "test" + new Date().toISOString(), time: new Date() },
+            {
+              longitude: this.lng,
+              latitude: this.lat
+            }
+          ).then(data => {
+            console.log("Function to get position:save time");
+          });
+        });
         this.zone.run(() => {
           this.lat = location.latitude;
           this.lng = location.longitude;
+          // this.locations.push(location);
         });
-        // this.backgroundGeolocation.finish();
-      },
-      err => {
-        console.log(err);
-      }
-    );
+        this.backgroundGeolocation.finish();
+      });
 
     // Turn ON the background-geolocation system.
     this.backgroundGeolocation.start();
@@ -107,7 +192,6 @@ export class LocatoinTrackerProvider {
   }
 
   startTracking(): void {
-    
     this.printBackground();
   }
   stopTracking(): void {

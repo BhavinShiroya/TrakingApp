@@ -74,7 +74,8 @@ export class LoginPage {
 
   login() {
     this.loading.show();
-    this.AuthServices.emailLogin(this.user.email, this.user.password).then((result) => {
+    // this.AuthServices.emailLogin(this.user.email, this.user.password)
+    this.AuthServices.emailLogin(this.user.email, this.user.password).subscribe((result: any) => {
       this.loading.hide();
       if (result.emailVerified) {
         this.storage.set('user', JSON.stringify(result));
@@ -82,11 +83,11 @@ export class LoginPage {
         this.navCtrl.setRoot('home-page');
       } else {
         this.Toaster.showToast('mail send successfully.');
-        this.AuthServices.sendEmailVerification();
+        // this.AuthServices.sendEmailVerification();
       }
-    }).catch((error) => {
+    }, (err: any) => {
       this.loading.hide();
-      this.Toaster.showToast(error.message);
+      this.Toaster.showToast(err.message);
     });
   }
 }

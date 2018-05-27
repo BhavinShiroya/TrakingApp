@@ -11,7 +11,7 @@ import { environment } from "../environments/environment";
 import { IonicStorageModule } from "@ionic/storage";
 import { LocalNotifications } from "@ionic-native/local-notifications";
 import { Diagnostic } from "@ionic-native/diagnostic";
-import { BackgroundMode } from "@ionic-native/background-mode";
+// import { BackgroundMode } from "@ionic-native/background-mode";
 import { MyApp } from "./app.component";
 import { AuthServicesProvider } from "../providers/auth-services/auth-services";
 import { ToasterServicesProvider } from "../providers/toaster-services/toaster-services";
@@ -28,11 +28,13 @@ import {
 } from "@ionic-native/background-geolocation";
 import { TimerServiceProvider } from "../providers/timer-service/timer-service";
 import { LocatoinTrackerProvider } from "../providers/locatoin-tracker/locatoin-tracker";
-
+import { ApiServiceProvider } from '../providers/api-service/api-service';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [MyApp],
   imports: [
     BrowserModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
@@ -48,7 +50,7 @@ import { LocatoinTrackerProvider } from "../providers/locatoin-tracker/locatoin-
     LocationAccuracy,
     Diagnostic,
     DatePicker,
-    BackgroundMode,
+    // BackgroundMode,
     BackgroundGeolocation,
     LocalNotifications,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
@@ -57,7 +59,8 @@ import { LocatoinTrackerProvider } from "../providers/locatoin-tracker/locatoin-
     ToasterServicesProvider,
     LoadingServicesProvider,
     TimerServiceProvider,
-    LocatoinTrackerProvider
+    LocatoinTrackerProvider,
+    ApiServiceProvider
   ]
 })
 export class AppModule {}

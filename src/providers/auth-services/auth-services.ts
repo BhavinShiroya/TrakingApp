@@ -2,6 +2,8 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { ApiServiceProvider } from '../api-service/api-service';
+import { Storage } from '@ionic/storage';
 
 /*
   Generated class for the AuthServicesProvider provider.
@@ -13,11 +15,21 @@ import { Observable } from 'rxjs/Observable';
 export class AuthServicesProvider {
 
   authState: any = null;
-
-  constructor(private afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+  user: any;
+  constructor(private afAuth: AngularFireAuth,
+    private db: AngularFireDatabase,
+    private api: ApiServiceProvider,
+    public storage: Storage,
+  ) {
     this.afAuth.authState.subscribe((auth) => {
       this.authState = auth
     });
+    // let user;
+    this.storage.get('user').then((result: any) => {
+      this.user = result;
+
+
+    })
   }
 
   public getAuthStatus() {
@@ -58,7 +70,7 @@ export class AuthServicesProvider {
   }
 
   saveTimers(uid, notificationObject, coordinates) {
-    console.log(uid,notificationObject,coordinates);
+    console.log(uid, notificationObject, coordinates);
     let path = `users/${uid}/timers`; // Endpoint on firebase
     var data = {
       name: notificationObject.name,
@@ -73,16 +85,24 @@ export class AuthServicesProvider {
     return this.db.object(`users/${uid}`).valueChanges();
   }
 
-  emailLogin(email: string, password: string) {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  emailLogin(email: string, password: string): any {
+    let param = {
+      email: email,
+      password: password
+    }
+    return this.api.post("/api/login", param);
   }
 
-  emailSignUp(email: string, password: string) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  emailSignUp(param: any) {
+
+    return this.api.post("/api/register", param);
   }
 
   signOut() {
-    return this.afAuth.auth.signOut();
+    let param = {
+      token: this.user.token
+    }
+    return this.api.post('api/logout', param);
   }
 
   sendEmailVerification() {

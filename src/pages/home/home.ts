@@ -26,7 +26,7 @@ import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { Diagnostic } from "@ionic-native/diagnostic";
 // import { BackgroundMode } from "@ionic-native/background-mode";
 import { BackgroundGeolocation } from "@ionic-native/background-geolocation";
-import { BackgroundMode } from "@ionic-native/background-mode";
+// import { BackgroundMode } from "@ionic-native/background-mode";
 import * as moment from "moment";
 import { Subscription } from "rxjs/Subscription";
 
@@ -74,13 +74,13 @@ export class HomePage {
     public Toaster: ToasterServicesProvider,
     public localNotifications: LocalNotifications,
     private backgroundGeolocation: BackgroundGeolocation,
-    private backgroundMode: BackgroundMode,
+    // private backgroundMode: BackgroundMode,
     private locationTracker: LocatoinTrackerProvider
   ) {
     this.platform.ready().then(() => {
       this.checkGPS();
-      this.locationTracker.startTracking();
-      this.backgroundMode.enable();
+      //this.locationTracker.startTracking();
+      //this.backgroundMode.enable();
 
       this.localNotifications.on("trigger", notification => {
         console.log(notification);
@@ -89,13 +89,6 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    // this.storage.get('user').then((data) => {
-    //   console.log(JSON.parse(data).uid);
-    //   // this.AuthServices.saveTimers(pos, JSON.parse(data).uid).then((data) => {
-    //   //   this.Toaster.showToast('saved Successully.');
-    //   // });
-    // });
-    //as
     this.storage.get("timer").then(data => {
       this.timerArray = JSON.parse(data);
       if (!this.timerArray || this.timerArray.length === 0) {
@@ -105,15 +98,6 @@ export class HomePage {
         this.timerTick();
       }
     });
-    // this.storage.get("warnTimer").then(data => {
-    //   this.warningTimeArray = JSON.parse(data);
-    //   if (!this.warningTimeArray || this.warningTimeArray.length === 0) {
-    //     this.warningTimeArray = [];
-    //   }
-    //   if (this.warningTimeArray.length > 0) {
-    //     this.warningTimeTick();
-    //   }
-    // });
   }
 
   checkGPS() {
@@ -264,11 +248,6 @@ export class HomePage {
           if (
             moment(this.timerArray[i].endTime).diff(currentDate, "seconds") < 1
           ) {
-            // console.log(
-            //   "about to push",
-            //   this.timerArray[i] + " on " + new Date()
-            // );
-
             this.locationTracker.pushLocation(this.timerArray[i]);
             this.extraTimer.push(this.timerArray[i]);
             this.timerArray.splice(i, 1);
@@ -284,14 +263,6 @@ export class HomePage {
     this.timerArray.splice(index, 1);
     this.storage.set("timer", JSON.stringify(this.timerArray));
   }
-
-  stopTracking() {
-    console.log("stopTracking");
-
-    this.backgroundGeolocation.finish();
-    this.watch.unsubscribe();
-  }
-
   sendNotification(object) {
     // this.locationTracker.stopTracking();
     this.localNotifications.schedule({

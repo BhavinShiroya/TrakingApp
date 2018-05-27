@@ -39,13 +39,20 @@ export class RegistrationPage {
 
   signUp() {
     this.loading.show();
-    this.AuthServices.emailSignUp(this.formData.email, this.formData.password).then((result) => {
-      this.AuthServices.sendEmailVerification();
-      this.AuthServices.updateUserData(result, this.formData);
+    let signUpDetail = {
+      name: this.formData.first_name,
+      email: this.formData.email,
+      password: this.formData.password,
+      manager_email: this.formData.emergency_email,
+      phone: "123"
+    };
+    this.AuthServices.emailSignUp(signUpDetail).subscribe((result: any) => {
+      // this.AuthServices.sendEmailVerification();
+      // this.AuthServices.updateUserData(result, this.formData);
       this.Toaster.showToast('Registration Successfully!');
       this.navCtrl.setRoot('LoginPage');
       this.loading.hide();
-    }).catch((error) => {
+    }, (error) => {
       this.loading.hide();
       this.Toaster.showToast(error.message);
     });
